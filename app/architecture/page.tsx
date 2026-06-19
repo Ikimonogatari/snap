@@ -39,6 +39,7 @@ export default function Architecture() {
         </div>
         <div className="relative z-10 mx-auto max-w-7xl px-6 py-20">
           <Header />
+          <BigPicture />
           <SectionDivider id="01" label="layered stack" />
           <PlainTalk>
             The app has 4 layers, like a sandwich. The phone is on top, then the API that handles requests, then the rules engine, then the AI brain at the bottom. Each layer only talks to the one right below it — that&rsquo;s what keeps the whole thing simple.
@@ -135,6 +136,85 @@ function SectionDivider({ id, label }: { id: string; label: string }) {
       <div className="font-mono text-[11px] uppercase tracking-[0.24em] text-ink-dim">{label}</div>
       <div className="h-px flex-1 bg-line" />
     </div>
+  );
+}
+
+/* ============================================================ BIG PICTURE — for non-coders */
+function BigPicture() {
+  const steps = [
+    {
+      n: "01",
+      icon: <Camera size={18} />,
+      t: "Snap",
+      d: "Open the app, point the camera at the damaged thing — a dented bumper, a cracked phone, a broken lamp.",
+    },
+    {
+      n: "02",
+      icon: <Mic size={18} />,
+      t: "Say",
+      d: "One sentence about what happened. Mongolian or English. That&rsquo;s the whole conversation.",
+    },
+    {
+      n: "03",
+      icon: <Brain size={18} />,
+      t: "Snap thinks",
+      d: "Claude (the AI) looks at the photo, checks fair-market data for that item, and weighs the condition. About 20 seconds.",
+    },
+    {
+      n: "04",
+      icon: <FileText size={18} />,
+      t: "Get the call",
+      d: "A clear, fair number — plus a shareable report you can hand to a guest, an insurer, a cop, or a marketplace seller.",
+    },
+  ];
+  return (
+    <motion.section
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.7, ease, delay: 0.15 }}
+      className="mt-14 rounded-3xl border border-coral/30 bg-coral/[0.06] p-8 md:p-10 overflow-hidden relative"
+    >
+      <div className="absolute -top-20 -right-20 h-72 w-72 rounded-full bg-coral/15 blur-3xl pointer-events-none" />
+      <div className="relative">
+        <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-coral flex items-center gap-2">
+          <div className="h-px w-8 bg-coral" /> if you&rsquo;re not a coder — start here
+        </div>
+        <h2 className="font-display text-4xl md:text-5xl leading-[0.95] mt-3 tracking-[-0.02em] max-w-3xl">
+          The whole thing in <em className="text-coral not-italic">30 seconds</em>.
+        </h2>
+        <p className="mt-5 text-ink-muted max-w-2xl text-lg leading-relaxed">
+          Snap turns &ldquo;what&rsquo;s it worth?&rdquo; into &ldquo;here&rsquo;s what it&rsquo;s worth.&rdquo; Open the app, point at the damaged thing, say what happened — and twenty seconds later you have a fair number plus a report nobody can argue with.
+        </p>
+
+        <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+          {steps.map((s) => (
+            <div
+              key={s.n}
+              className="rounded-2xl border border-line bg-paper p-5 shadow-warm"
+            >
+              <div className="flex items-center justify-between">
+                <div className="text-coral">{s.icon}</div>
+                <div className="font-mono text-[11px] text-coral">{s.n}</div>
+              </div>
+              <div className="mt-4 font-display text-2xl">{s.t}</div>
+              <p className="mt-2 text-[13px] text-ink-muted leading-relaxed">{s.d}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-8 rounded-2xl border border-line bg-paper p-5 flex items-start gap-4">
+          <div className="shrink-0 h-9 w-9 rounded-full bg-coral/15 border border-coral/40 flex items-center justify-center text-coral">
+            <Sparkles size={16} />
+          </div>
+          <div className="text-[14px] md:text-[15px] leading-relaxed text-ink">
+            <span className="font-medium">The big idea:</span>{" "}
+            <span className="text-ink-muted">
+              every day, somebody loses money to a guess — a guest&rsquo;s broken lamp, a dented door, an overpriced second-hand phone. Snap replaces the guess with a sourced number both sides can see. Everything below this line is the engineering behind those four steps.
+            </span>
+          </div>
+        </div>
+      </div>
+    </motion.section>
   );
 }
 
