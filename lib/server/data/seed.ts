@@ -1,0 +1,110 @@
+import type { Case, Technician } from "../../types";
+
+// Snap re-uses the same engine types — a "Case" here is a user-initiated "Snap".
+
+export const technicians: Technician[] = [];
+
+export const cases: Case[] = [
+  {
+    id: "s-1001",
+    caseCode: "SNP-1001",
+    industry: "property",
+    assetType: "Airbnb damage",
+    asset: "Designer floor lamp · West Elm Mid-Century",
+    customer: "Airbnb host · Bayanzurkh, UB",
+    location: "Listing #4421 — guest check-out",
+    coordinates: { lat: 47.918, lng: 106.917 },
+    reportedBy: "Tuya (host)",
+    reportedIssue:
+      "Guest's kid knocked over the floor lamp. Shade is cracked clean across the middle, base looks fine, bulb works. What should I claim?",
+    severity: "medium",
+    status: "queued",
+    slaMinutes: 0,
+    assignedTo: "",
+    createdAt: "2026-06-19T10:14:00+08:00",
+  },
+  {
+    id: "s-1002",
+    caseCode: "SNP-1002",
+    industry: "insurance",
+    assetType: "Car damage",
+    asset: "Hyundai Sonata 2021 · rear door",
+    customer: "Personal claim · Munkh",
+    location: "Parking lot — Shangri-La",
+    coordinates: { lat: 47.913, lng: 106.918 },
+    reportedBy: "Munkh (driver)",
+    reportedIssue:
+      "Someone backed into my rear door in the parking lot and drove off. Small dent and paint scuff. I need a damage estimate for insurance.",
+    severity: "medium",
+    status: "queued",
+    slaMinutes: 0,
+    assignedTo: "",
+    createdAt: "2026-06-19T09:42:00+08:00",
+  },
+  {
+    id: "s-1003",
+    caseCode: "SNP-1003",
+    industry: "it",
+    assetType: "Marketplace listing",
+    asset: "iPhone 13 Pro 256GB — buying used",
+    customer: "Marketplace buyer · Khan",
+    location: "Facebook listing — UB",
+    coordinates: { lat: 47.918, lng: 106.917 },
+    reportedBy: "Khan (buyer)",
+    reportedIssue:
+      "Seller wants ₮1,800,000 for this iPhone. Back glass has a hairline crack and a corner ding. What's it actually worth?",
+    severity: "low",
+    status: "queued",
+    slaMinutes: 0,
+    assignedTo: "",
+    createdAt: "2026-06-19T09:08:00+08:00",
+  },
+  {
+    id: "s-1004",
+    caseCode: "SNP-1004",
+    industry: "property",
+    assetType: "Move-out inspection",
+    asset: "Rental apt · 2BR Sukhbaatar",
+    customer: "Tenant claim · Bilegma",
+    location: "8 Sukhbaatar Sq — flat 4B",
+    coordinates: { lat: 47.919, lng: 106.918 },
+    reportedBy: "Bilegma (tenant)",
+    reportedIssue:
+      "Moving out tomorrow. Landlord says he'll keep my deposit because of a wall stain in the bedroom and a scuff on the wood floor. Want to know what's fair.",
+    severity: "low",
+    status: "queued",
+    slaMinutes: 0,
+    assignedTo: "",
+    createdAt: "2026-06-19T08:54:00+08:00",
+  },
+  {
+    id: "s-1005",
+    caseCode: "SNP-1005",
+    industry: "it",
+    assetType: "Personal property",
+    asset: "MacBook Air M2 · liquid damage",
+    customer: "Insurance prep · Anu",
+    location: "Home · Khoroolol 3",
+    coordinates: { lat: 47.909, lng: 106.878 },
+    reportedBy: "Anu (owner)",
+    reportedIssue:
+      "Spilled coffee on my MacBook. Keyboard still types but trackpad is glitching. Filing a claim — need a report.",
+    severity: "high",
+    status: "queued",
+    slaMinutes: 0,
+    assignedTo: "",
+    createdAt: "2026-06-19T08:30:00+08:00",
+  },
+];
+
+export const fleetStats = {
+  activeTechnicians: 0,
+  openCases: cases.length,
+  avgAssessmentSeconds: 14,
+  costDecisionsThisWeek: 0,
+  costSavedUsd: 0,
+  firstTimeFixRate: 0,
+  resolutionDelta: 0,
+  byIndustry: [],
+  technicians,
+};
