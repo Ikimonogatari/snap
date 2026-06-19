@@ -40,24 +40,54 @@ export default function Architecture() {
         <div className="relative z-10 mx-auto max-w-7xl px-6 py-20">
           <Header />
           <SectionDivider id="01" label="layered stack" />
+          <PlainTalk>
+            The app has 4 layers, like a sandwich. The phone is on top, then the API that handles requests, then the rules engine, then the AI brain at the bottom. Each layer only talks to the one right below it — that&rsquo;s what keeps the whole thing simple.
+          </PlainTalk>
           <Stack />
           <SectionDivider id="02" label="phone to fair value · request flow" />
+          <PlainTalk>
+            Step-by-step, from the moment the user taps &ldquo;Snap it&rdquo; to the moment a fair price shows up on screen. Every line below is one hand-off between two parts of the system.
+          </PlainTalk>
           <Flow />
           <SectionDivider id="03" label="ai brain" />
+          <PlainTalk>
+            Claude (the AI) gets one photo + a voice note + a hint about the scenario (car, Airbnb, marketplace, etc.) and returns one structured answer. No chatting, no follow-ups — one request in, one fair number out.
+          </PlainTalk>
           <AILayer />
           <SectionDivider id="04" label="image recognition" />
+          <PlainTalk>
+            How the AI sees a photo: shutter → shrink to save bandwidth → upload → AI spots the item, locates damage, scores how confident it is. If confidence is too low, Snap asks the user to retake the photo.
+          </PlainTalk>
           <Vision />
           <SectionDivider id="05" label="value engine" />
+          <PlainTalk>
+            The rules that turn what the AI sees into a fair number: repair, replace, or &ldquo;not worth it&rdquo; — plus what it&rsquo;ll cost. Without these rules, the AI would just describe stuff; with them, it actually decides.
+          </PlainTalk>
           <ValueEngine />
           <SectionDivider id="06" label="backend services" />
+          <PlainTalk>
+            Four small &ldquo;departments&rdquo; running behind the scenes: one stores snaps, one runs the AI, one finalizes reports, one checks the system is alive. Each does one job well.
+          </PlainTalk>
           <Backend />
           <SectionDivider id="07" label="privacy + safety" />
+          <PlainTalk>
+            How user photos and data stay theirs. Faces and license plates are blurred before upload, photos are deleted when the snap is deleted, data is never sold, and the AI is told to be honest — even with whoever paid for the snap.
+          </PlainTalk>
           <Privacy />
           <SectionDivider id="08" label="how snap gets smarter" />
+          <PlainTalk>
+            Every accepted snap teaches the next one. The more people use Snap, the sharper it gets at recognizing common items — without retraining the AI, just by feeding it good examples from past snaps.
+          </PlainTalk>
           <KnowledgeLoop />
           <SectionDivider id="09" label="where it runs" />
+          <PlainTalk>
+            The technical setup: one Next.js app on a standard server, with the AI API key kept as a secret on the server side. Simple to ship, simple to operate.
+          </PlainTalk>
           <Deployment />
           <SectionDivider id="10" label="roadmap" />
+          <PlainTalk>
+            What&rsquo;s coming next, quarter by quarter — the features we&rsquo;re planning to add over the next year.
+          </PlainTalk>
           <Roadmap />
         </div>
       </div>
@@ -681,6 +711,23 @@ function Roadmap() {
 }
 
 /* ============================================================ helpers */
+function PlainTalk({ children }: { children: React.ReactNode }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 0.5, ease }}
+      className="mb-6 rounded-2xl border border-dashed border-coral/40 bg-coral/5 p-4"
+    >
+      <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-coral mb-1.5">
+        in plain words
+      </div>
+      <p className="text-[14px] text-ink-muted leading-relaxed max-w-3xl">{children}</p>
+    </motion.div>
+  );
+}
+
 function Subhead({ children }: { children: React.ReactNode }) {
   return (
     <div className="mt-5 font-mono text-[10px] uppercase tracking-[0.22em] text-ink-dim">

@@ -7,6 +7,30 @@ import { Home, Car, ShoppingBag, KeyRound, Laptop, Sparkles } from "lucide-react
 const scenarios = [
   {
     k: "01",
+    tag: "Driver · small bump",
+    icon: <Car size={14} />,
+    headline: "Someone scuffed your door.",
+    sub: "Settle on the spot.",
+    verdict: "Bargain · ₮95,000",
+    amount: "₮95,000",
+    color: "mint",
+    narrative:
+      "Parking-lot dent + paint scuff. PDR + paint blend. Fair value ₮95,000. Show the other driver the Snap report — settle right there. No police needed.",
+  },
+  {
+    k: "02",
+    tag: "Driver · serious",
+    icon: <Car size={14} />,
+    headline: "Bumper cracked at a junction.",
+    sub: "Police + Mongol Daatgal.",
+    verdict: "ХАОДД claim",
+    amount: "₮2,400,000",
+    color: "coral",
+    narrative:
+      "Side-impact at an intersection. Bumper + door replacement. The Snap report is evidence for both the Mongol Daatgal adjuster and the traffic-police violation protocol. The at-fault driver's insurance pays.",
+  },
+  {
+    k: "03",
     tag: "Airbnb host",
     icon: <Home size={14} />,
     headline: "Guest broke a lamp.",
@@ -18,19 +42,7 @@ const scenarios = [
       "The lamp body is fine. The shade is sold separately on West Elm — about $65. That's the fair claim, not the $400 the whole lamp cost.",
   },
   {
-    k: "02",
-    tag: "Driver",
-    icon: <Car size={14} />,
-    headline: "Someone scuffed your door.",
-    sub: "You snap the dent.",
-    verdict: "Fixable · PDR",
-    amount: "$280",
-    color: "mint",
-    narrative:
-      "Paintless dent repair plus a paint blend. Three hours at a body shop. Two quotes attached. Most insurers approve PDR under $500 same-day.",
-  },
-  {
-    k: "03",
+    k: "04",
     tag: "Marketplace buyer",
     icon: <ShoppingBag size={14} />,
     headline: "Used iPhone — overpriced?",
@@ -40,18 +52,6 @@ const scenarios = [
     color: "coral",
     narrative:
       "Fair market for this cosmetic condition is ₮1.25M–₮1.4M. The seller's asking ₮1.8M. Counter ₮1.35M. Walk away above ₮1.45M.",
-  },
-  {
-    k: "04",
-    tag: "Renter moving out",
-    icon: <KeyRound size={14} />,
-    headline: "Landlord wants the deposit.",
-    sub: "You snap the wear.",
-    verdict: "Normal wear",
-    amount: "$45 max",
-    color: "mint",
-    narrative:
-      "Wall discoloration and a finish-level floor scuff are wear-and-tear by Mongolian tenancy law. Reasonable touch-up is $45 in materials — not the deposit.",
   },
   {
     k: "05",
@@ -152,9 +152,9 @@ function ScenarioRow({
 }) {
   const start = i / total;
   const end = (i + 1) / total;
-  const opacity = useTransform(progress, [start - 0.06, start, end, end + 0.06], [0.3, 1, 1, 0.3]);
-  const x = useTransform(progress, [start - 0.06, start, end + 0.06], [-6, 0, 8]);
-  const scale = useTransform(progress, [start - 0.06, start, end, end + 0.06], [0.96, 1, 1, 0.96]);
+  const opacity = useTransform(progress, [start - 0.06, start, end, end + 0.06], [0.3, 1, 1, 0.3], { clamp: false });
+  const x = useTransform(progress, [start - 0.06, start, end + 0.06], [-6, 0, 8], { clamp: false });
+  const scale = useTransform(progress, [start - 0.06, start, end, end + 0.06], [0.96, 1, 1, 0.96], { clamp: false });
   return (
     <motion.li style={{ opacity, x, scale }} className="flex items-baseline gap-4">
       <span className="font-mono text-[11px] text-coral">{s.k}</span>
@@ -175,8 +175,8 @@ function NarrativePanel({
   s: (typeof scenarios)[number];
   progress: ReturnType<typeof useScroll>["scrollYProgress"];
 }) {
-  const opacity = useTransform(progress, [start - 0.04, start, end, end + 0.04], [0, 1, 1, 0]);
-  const y = useTransform(progress, [start - 0.04, start, end + 0.04], [24, 0, -24]);
+  const opacity = useTransform(progress, [start - 0.04, start, end, end + 0.04], [0, 1, 1, 0], { clamp: false });
+  const y = useTransform(progress, [start - 0.04, start, end + 0.04], [24, 0, -24], { clamp: false });
   return (
     <motion.div style={{ opacity, y }} className="absolute inset-0 flex items-center">
       <div className="rounded-3xl border border-line bg-cream/80 backdrop-blur p-6 shadow-warm">
@@ -263,8 +263,8 @@ function PhoneScreen({
 }) {
   const start = idx / total;
   const end = (idx + 1) / total;
-  const opacity = useTransform(progress, [start - 0.05, start, end - 0.02, end + 0.02], [0, 1, 1, 0]);
-  const y = useTransform(progress, [start - 0.05, start, end + 0.02], [40, 0, -40]);
+  const opacity = useTransform(progress, [start - 0.05, start, end - 0.02, end + 0.02], [0, 1, 1, 0], { clamp: false });
+  const y = useTransform(progress, [start - 0.05, start, end + 0.02], [40, 0, -40], { clamp: false });
   const s = scenarios[idx];
   return (
     <motion.div style={{ opacity, y }} className="absolute inset-0">

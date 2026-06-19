@@ -32,6 +32,29 @@ export interface AssessmentReports {
   customerSummary: string;
 }
 
+export interface PricingComponent {
+  label: string;
+  amount: number;
+  currency: "USD" | "MNT";
+  note?: string;
+}
+
+export interface FixLocation {
+  name: string;
+  address: string;
+  phone?: string;
+  distanceKm?: number;
+  rating?: number;
+  note?: string;
+}
+
+export interface MarketComparison {
+  fairMarketValue?: number;
+  replacementCost?: number;
+  currency: "USD" | "MNT";
+  source: string;
+}
+
 export interface Assessment {
   detectedAsset: string;
   confidence: number;
@@ -41,6 +64,9 @@ export interface Assessment {
   partsNeeded: string[];
   safetyWarnings: string[];
   reports: AssessmentReports;
+  pricingBreakdown?: PricingComponent[];
+  fixLocations?: FixLocation[];
+  marketComparison?: MarketComparison;
   generatedBy: "claude-opus-4-7" | "scripted-fallback";
   generatedAt: string;
 }

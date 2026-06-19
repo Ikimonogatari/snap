@@ -19,6 +19,7 @@ import { CursorBlob } from "@/components/motion/CursorBlob";
 import { CountUp } from "@/components/motion/CountUp";
 import { MagneticButton } from "@/components/motion/MagneticButton";
 import { ScrollScenarios } from "@/components/motion/ScrollScenarios";
+import { CrashFlow } from "@/components/CrashFlow";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -30,6 +31,7 @@ export default function Landing() {
       <Nav />
       <Hero />
       <PinnedNarrative />
+      <CrashFlow />
       <UseCases />
       <ScrollScenarios />
       <How />
@@ -104,10 +106,10 @@ function Hero() {
           className="mt-10 max-w-2xl"
         >
           <p className="text-[18px] md:text-[22px] leading-relaxed text-ink-muted">
-            Point your camera at a damaged, worn, or used item. Snap returns a fair value,
-            a clear recommendation, and a shareable report — in 20 seconds. For Airbnb
-            hosts, drivers, marketplace traders, and anyone who's ever argued about a
-            deposit.
+            Point your camera at the damage — a dented bumper, a cracked iPhone, a
+            scuffed wall — and Snap returns a fair value plus a report you can show a
+            cop, an insurer, a host, or a marketplace seller. Built for the moments
+            Mongolian drivers know too well: <em className="text-ink not-italic">settle on the spot, or call the police.</em>
           </p>
         </motion.div>
 
@@ -140,12 +142,12 @@ function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 1.2 }}
-          className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-3xl border-t border-line pt-8"
+          className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-10 max-w-3xl border-t border-line pt-8"
         >
-          <Pulse k={<>~<CountUp to={20} />s</>} v="snap to report" />
-          <Pulse k={<>$<CountUp to={420} format="comma" /></>} v="avg saved per claim" />
-          <Pulse k={<><CountUp to={94} />%</>} v="reports accepted by insurers" />
-          <Pulse k={<><CountUp to={5} /></>} v="everyday scenarios" />
+          <Pulse k={<><CountUp to={20} trigger="mount" delay={1.4} /><Unit>s</Unit></>} v="snap to report" />
+          <Pulse k={<><Unit>$</Unit><CountUp to={420} format="comma" trigger="mount" delay={1.4} /></>} v="avg saved per claim" />
+          <Pulse k={<><CountUp to={94} trigger="mount" delay={1.4} /><Unit>%</Unit></>} v="reports accepted" />
+          <Pulse k={<><CountUp to={5} trigger="mount" delay={1.4} /></>} v="everyday scenarios" />
         </motion.div>
       </motion.div>
 
@@ -183,11 +185,22 @@ function RevealLine({ children, delay = 0 }: { children: React.ReactNode; delay?
 
 function Pulse({ k, v }: { k: React.ReactNode; v: string }) {
   return (
-    <div>
-      <div className="font-display text-5xl text-ink leading-none">{k}</div>
-      <div className="mt-2 font-mono text-[11px] uppercase tracking-[0.2em] text-ink-dim">{v}</div>
+    <div className="flex flex-col">
+      <div
+        className="font-display text-[44px] md:text-5xl text-ink leading-none flex items-baseline gap-0"
+        style={{ fontVariantNumeric: "tabular-nums" }}
+      >
+        {k}
+      </div>
+      <div className="mt-3 font-mono text-[10px] md:text-[11px] uppercase tracking-[0.2em] text-ink-dim leading-snug">
+        {v}
+      </div>
     </div>
   );
+}
+
+function Unit({ children }: { children: React.ReactNode }) {
+  return <span className="text-ink-muted">{children}</span>;
 }
 
 function PinnedNarrative() {
@@ -230,8 +243,8 @@ function Phrase({
   eyebrow: string;
   body: string;
 }) {
-  const opacity = useTransform(progress, [start - 0.03, start + 0.02, end - 0.05, end], [0, 1, 1, 0]);
-  const y = useTransform(progress, [start, end], [0, -40]);
+  const opacity = useTransform(progress, [start - 0.03, start + 0.02, end - 0.05, end], [0, 1, 1, 0], { clamp: false });
+  const y = useTransform(progress, [start, end], [0, -40], { clamp: false });
   return (
     <motion.div style={{ opacity, y }} className="absolute inset-0 flex flex-col items-center justify-center">
       <div className="font-mono text-[11px] uppercase tracking-[0.32em] text-coral">{eyebrow}</div>
@@ -257,8 +270,8 @@ function Outro({ progress }: { progress: ReturnType<typeof useScroll>["scrollYPr
 
 function UseCases() {
   const cases = [
+    { icon: <Car size={18} />, tag: "Drivers", h: "Someone scuffed your door.", d: "Snap the dent before anyone moves. Get an insurer-ready report aligned with the local compulsory motor liability rules, plus a fair MNT figure either side can argue against.", pop: "₮95,000 — settled on the spot" },
     { icon: <Home size={18} />, tag: "Airbnb hosts", h: "Guest broke a lamp.", d: "Snap the damage. Snap returns a fair claim amount you can show your guest — no arguing, no inflated guess.", pop: "+$120 fair claim" },
-    { icon: <Car size={18} />, tag: "Drivers", h: "Someone scuffed your door.", d: "Snap the dent. Get an insurer-ready report and a repair estimate in under a minute. Beat the other driver to the claim.", pop: "$280 PDR estimate" },
     { icon: <ShoppingBag size={18} />, tag: "Marketplace buyers", h: "Is this used phone overpriced?", d: "Snap the listing photos. Snap tells you what it's actually worth — and how much to counter-offer.", pop: "Counter ₮1.3M" },
     { icon: <KeyRound size={18} />, tag: "Renters moving out", h: "Landlord wants the deposit.", d: "Snap the wall stain, the floor scuff, the loose hinge. Snap separates normal wear from real damage. Keep your deposit.", pop: "Wear-and-tear only" },
     { icon: <Laptop size={18} />, tag: "Insurance claims", h: "Coffee on your laptop.", d: "Snap the damage. Snap drafts the damage report your insurer expects — and tells you what NOT to do next.", pop: "$320 covered" },
@@ -486,7 +499,7 @@ function Footer() {
     <footer className="border-t border-line bg-paper">
       <div className="mx-auto max-w-7xl px-6 py-12 flex flex-wrap items-center justify-between gap-4 text-[11px] font-mono text-ink-dim">
         <LogoMark size={32} />
-        <div className="uppercase tracking-[0.22em]">«өөрийн зурагнаас үнэлэлт»</div>
+        <div className="uppercase tracking-[0.22em]">«from your photo to a fair number»</div>
         <div className="uppercase tracking-[0.22em]">snap · 2026</div>
       </div>
     </footer>

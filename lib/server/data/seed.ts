@@ -1,6 +1,6 @@
 import type { Case, Technician } from "../../types";
 
-// Snap re-uses the same engine types — a "Case" here is a user-initiated "Snap".
+// In Snap, "Case" is a "Snap" — a user-initiated assessment.
 
 export const technicians: Technician[] = [];
 
@@ -8,6 +8,42 @@ export const cases: Case[] = [
   {
     id: "s-1001",
     caseCode: "SNP-1001",
+    industry: "insurance",
+    assetType: "Car crash · small",
+    asset: "Toyota Prius 30 — rear-right door",
+    customer: "Roadside · Sukhbaatar Square",
+    location: "Sukhbaatar Square — parking lot",
+    coordinates: { lat: 47.919, lng: 106.917 },
+    reportedBy: "Driver · Bold",
+    reportedIssue:
+      "Backed into another car in the parking lot. Small dent, paint scuffed. The other driver is asking whether to call the police or settle on the spot.",
+    severity: "low",
+    status: "queued",
+    slaMinutes: 0,
+    assignedTo: "",
+    createdAt: "2026-06-19T10:32:00+08:00",
+  },
+  {
+    id: "s-1002",
+    caseCode: "SNP-1002",
+    industry: "insurance",
+    assetType: "Car crash · serious",
+    asset: "Hyundai Sonata 2021 — front-right panel + bumper",
+    customer: "Peace Avenue · intersection",
+    location: "Peace Ave — junction with Baga Toiruu",
+    coordinates: { lat: 47.913, lng: 106.918 },
+    reportedBy: "Driver · Munkh (victim)",
+    reportedIssue:
+      "A Land Cruiser hit me from the side. Bumper cracked, front-right door is bent in. I called the police and now need to call Mongol Daatgal first for the damage assessment.",
+    severity: "high",
+    status: "queued",
+    slaMinutes: 0,
+    assignedTo: "",
+    createdAt: "2026-06-19T09:42:00+08:00",
+  },
+  {
+    id: "s-1003",
+    caseCode: "SNP-1003",
     industry: "property",
     assetType: "Airbnb damage",
     asset: "Designer floor lamp · West Elm Mid-Century",
@@ -24,26 +60,8 @@ export const cases: Case[] = [
     createdAt: "2026-06-19T10:14:00+08:00",
   },
   {
-    id: "s-1002",
-    caseCode: "SNP-1002",
-    industry: "insurance",
-    assetType: "Car damage",
-    asset: "Hyundai Sonata 2021 · rear door",
-    customer: "Personal claim · Munkh",
-    location: "Parking lot — Shangri-La",
-    coordinates: { lat: 47.913, lng: 106.918 },
-    reportedBy: "Munkh (driver)",
-    reportedIssue:
-      "Someone backed into my rear door in the parking lot and drove off. Small dent and paint scuff. I need a damage estimate for insurance.",
-    severity: "medium",
-    status: "queued",
-    slaMinutes: 0,
-    assignedTo: "",
-    createdAt: "2026-06-19T09:42:00+08:00",
-  },
-  {
-    id: "s-1003",
-    caseCode: "SNP-1003",
+    id: "s-1004",
+    caseCode: "SNP-1004",
     industry: "it",
     assetType: "Marketplace listing",
     asset: "iPhone 13 Pro 256GB — buying used",
@@ -58,24 +76,6 @@ export const cases: Case[] = [
     slaMinutes: 0,
     assignedTo: "",
     createdAt: "2026-06-19T09:08:00+08:00",
-  },
-  {
-    id: "s-1004",
-    caseCode: "SNP-1004",
-    industry: "property",
-    assetType: "Move-out inspection",
-    asset: "Rental apt · 2BR Sukhbaatar",
-    customer: "Tenant claim · Bilegma",
-    location: "8 Sukhbaatar Sq — flat 4B",
-    coordinates: { lat: 47.919, lng: 106.918 },
-    reportedBy: "Bilegma (tenant)",
-    reportedIssue:
-      "Moving out tomorrow. Landlord says he'll keep my deposit because of a wall stain in the bedroom and a scuff on the wood floor. Want to know what's fair.",
-    severity: "low",
-    status: "queued",
-    slaMinutes: 0,
-    assignedTo: "",
-    createdAt: "2026-06-19T08:54:00+08:00",
   },
   {
     id: "s-1005",

@@ -97,13 +97,19 @@ function safeParseJson(text: string): Partial<Assessment> | null {
 
 function scriptedFallback(industry: Industry, asset: string, description: string): Assessment {
   const desc = description.toLowerCase();
-  let key: keyof typeof templates = industry === "insurance" ? "car" :
-                                    industry === "it" && desc.includes("iphone") ? "marketplace" :
-                                    industry === "it" && desc.includes("coffee") ? "laptop_liquid" :
-                                    industry === "it" ? "marketplace" :
-                                    industry === "property" && desc.includes("deposit") ? "moveout" :
-                                    industry === "property" ? "airbnb_lamp" :
-                                    "airbnb_lamp";
+  const assetLow = asset.toLowerCase();
+  const isCrash = industry === "insurance" || assetLow.includes("toyota") || assetLow.includes("hyundai") || assetLow.includes("prius") || assetLow.includes("sonata") || assetLow.includes("land cruiser");
+  const isBigCrash = isCrash && (desc.includes("цагдаа") || desc.includes("police") || desc.includes("даатгал") || desc.includes("монгол даатгал") || desc.includes("бампер хагар") || desc.includes("хагар"));
+
+  const key: keyof typeof templates =
+    isCrash && isBigCrash ? "car_big" :
+    isCrash ? "car_small" :
+    industry === "it" && desc.includes("iphone") ? "marketplace" :
+    industry === "it" && (desc.includes("coffee") || desc.includes("кофе") || desc.includes("macbook")) ? "laptop_liquid" :
+    industry === "it" ? "marketplace" :
+    industry === "property" && (desc.includes("deposit") || desc.includes("барьцаа")) ? "moveout" :
+    industry === "property" ? "airbnb_lamp" :
+    "airbnb_lamp";
 
   const base = templates[key];
   return {
@@ -142,32 +148,109 @@ const templates: Record<string, Template> = {
       claimSummary: "The lamp's shade is damaged but the lamp itself is fine. A fair claim is the cost of a replacement shade (about $65), not the full lamp. Receipts available on request.",
       customerSummary: "Shade-only replacement — about $65 is a fair claim.",
     },
+    pricingBreakdown: [
+      { label: "Replacement drum shade", amount: 60, currency: "USD", note: "West Elm or matching brand" },
+      { label: "Shipping to UB", amount: 5, currency: "USD", note: "via DHL or local courier" },
+      { label: "Labour (swap)", amount: 0, currency: "USD", note: "DIY, no tools required" },
+    ],
+    marketComparison: {
+      replacementCost: 400,
+      currency: "USD",
+      source: "Full lamp ~$400 retail. Shade-only repair = 16% of replacement.",
+    },
+    fixLocations: [
+      { name: "West Elm Online · ships to MN", address: "westelm.com · cart, ship via DHL", phone: undefined, rating: 4.7, note: "Standalone shade SKU available" },
+      { name: "Onon Decor", address: "Sukhbaatar, Olympic St 12 (interior store)", phone: "+976 7011-8899", distanceKm: 1.6, rating: 4.5, note: "Stocks similar drum shades" },
+      { name: "IKEA UB (proxy buy)", address: "Khan-Uul, central retail", phone: undefined, distanceKm: 4.4, rating: 4.4, note: "Compatible IKEA shade for ~$30" },
+    ],
   },
-  car: {
-    detectedAsset: "Hyundai Sonata 2021 — rear passenger-side door",
-    confidence: 0.89,
+  car_small: {
+    detectedAsset: "Toyota Prius 30 — rear-right door",
+    confidence: 0.92,
     damages: [
-      { type: "Dent + paint scuff", severity: "medium", location: "Rear passenger door, lower-center panel", evidence: "Shallow concave dent (~10cm) with white paint transfer; no visible damage to glass or sheet-metal seam." },
-      { type: "Trim integrity", severity: "low", location: "Door handle + trim", evidence: "Handle and trim appear intact and aligned." },
+      { type: "Small dent + paint scuff", severity: "low", location: "Lower rear-right door, mid panel", evidence: "Shallow concave dent ~5–7cm wide. Paint scuffed at the surface; no metal exposed. Window, frame, handle, seal all intact." },
+      { type: "Door operation", severity: "low", location: "Handle + frame", evidence: "Door opens and closes normally. No unusual noise." },
     ],
     verdict: {
       decision: "repair",
-      reason: "Paintless dent repair (PDR) plus a paint touch-up will restore the panel without a full panel respray. Total loss is not indicated; structural panel is unaffected.",
-      estimatedCost: { amount: 280, currency: "USD" },
-      estimatedTimeMinutes: 180,
+      reason: "Minor damage — settling on the spot is the right call. A dent of this size repairs for ₮80,000–₮120,000 with paintless dent repair (PDR) plus a paint blend. No need to call the police.",
+      estimatedCost: { amount: 95000, currency: "MNT" },
+      estimatedTimeMinutes: 120,
     },
     repairSteps: [
-      { index: 1, title: "Document for your insurance claim", description: "Take 5 photos: wide of the side, close-up of the dent, full vehicle front-quarter, license plate, odometer.", estMinutes: 8, toolsRequired: ["Phone camera"], safetyNote: null },
-      { index: 2, title: "Get 2 PDR quotes", description: "Paintless dent repair shops can fix this in an afternoon. Ask for an itemized quote (dent + paint blend).", estMinutes: 30, toolsRequired: [], safetyNote: null },
-      { index: 3, title: "Submit to insurer with quotes", description: "Attach the report below plus 2 quotes. Most insurers approve PDR claims same-day under $500.", estMinutes: 15, toolsRequired: [], safetyNote: null },
+      { index: 1, title: "Show this assessment to the other driver", description: "Show them the Snap report on your phone. ₮95,000 is the fair number. Aim to settle here at this number.", estMinutes: 3, toolsRequired: [], safetyNote: null },
+      { index: 2, title: "Write a short handwritten note and get signatures", description: "Date, time, both plate numbers, brief damage description, agreed amount. Both drivers sign + one witness signs.", estMinutes: 8, toolsRequired: ["Phone camera"], safetyNote: "If the other driver refuses to sign — stop here. Call the police and Mongol Daatgal." },
+      { index: 3, title: "Pay or receive cash, or use a bank transfer", description: "QPay or bank transfer leaves a paper trail. Keep the Snap report and the payment receipt together.", estMinutes: 5, toolsRequired: [], safetyNote: null },
     ],
-    partsNeeded: ["PDR labor + paint touch-up (no parts)"],
-    safetyWarnings: ["Drive normally — no structural concern. Inspect door seals after repair."],
+    partsNeeded: ["PDR repair + paint blend (no replacement parts)"],
+    safetyWarnings: ["Safe to drive normally. Check the door seal after repair, in case water can get in.", "Never accept a verbal-only agreement. Always get signatures + 1 witness."],
     reports: {
-      damageReport: "Vehicle is a 2021 Hyundai Sonata with localized rear-door damage on the passenger side. The damage consists of a shallow concave dent approximately 10cm across with associated white paint transfer, consistent with a low-speed contact from a lighter-colored vehicle. Glass, seam, handle, and trim are intact. Recommended remediation is paintless dent repair plus paint touch-up, estimated at $280 / 3 hours.",
-      claimSummary: "Low-speed parking-lot contact. Dent + paint scuff on rear door only — no structural damage. Repair estimate is $280 via PDR. Quotes attached.",
-      customerSummary: "Fixable for about $280 — paintless dent repair plus paint touch-up.",
+      damageReport: "Toyota Prius 30 with minor damage. A 5–7cm shallow dent in the lower rear-right door, paint scuffed at the surface only. Window, frame, handle, and seal are all intact. Recommendation: PDR + paint blend, total ~₮95,000 / 2 hours. No structural damage — safe to settle in writing on the spot.",
+      claimSummary: "Small parking-lot dent + paint scuff. Repairable with PDR + paint blend. Fair value ₮95,000. Can be settled on the spot without calling the police.",
+      customerSummary: "Safe to settle on the spot — ₮95,000 is the fair number.",
     },
+    pricingBreakdown: [
+      { label: "Paintless dent repair (PDR)", amount: 55000, currency: "MNT", note: "1 area × medium severity" },
+      { label: "Paint blend + polish", amount: 30000, currency: "MNT", note: "color match the door" },
+      { label: "Replacement parts", amount: 0, currency: "MNT", note: "none required" },
+      { label: "Labour (2 hours)", amount: 10000, currency: "MNT", note: "UB average shop rate" },
+    ],
+    marketComparison: {
+      replacementCost: 1800000,
+      currency: "MNT",
+      source: "Full door replacement ≈ ₮1,800,000 (Toyota Mongolia parts). This repair is ~5% of replacement.",
+    },
+    fixLocations: [
+      { name: "Sengur Auto Service", address: "Khan-Uul, 11th khoroo, auto service complex", phone: "+976 9911-2234", distanceKm: 2.4, rating: 4.7, note: "PDR specialist" },
+      { name: "Erkhet Garage", address: "Songinokhairkhan, 21st khoroo", phone: "+976 8800-7711", distanceKm: 4.8, rating: 4.5, note: "Accepts Snap reports digitally" },
+      { name: "Tegun Auto Service", address: "Bayanzurkh, Peace Ave 14A", phone: "+976 9911-5566", distanceKm: 3.1, rating: 4.6 },
+    ],
+  },
+  car_big: {
+    detectedAsset: "Hyundai Sonata 2021 — front-right door + bumper",
+    confidence: 0.88,
+    damages: [
+      { type: "Bumper crack", severity: "high", location: "Front bumper, 28cm crack across the center", evidence: "ABS material cracked all the way through, with one side of the parking sensor dislodged. Paint transfer visible across the lower section." },
+      { type: "Door deformation", severity: "high", location: "Front-right door, lower half", evidence: "Door pushed inward 3–4cm and lost its shape. The door only half-opens." },
+      { type: "Parking sensor", severity: "medium", location: "Inside the bumper", evidence: "Sensor position is displaced and requires recalibration." },
+    ],
+    verdict: {
+      decision: "repair",
+      reason: "No structural steel or frame damage visible. Replacing the bumper + door and recalibrating the sensor is about 25% of the vehicle's value — not a total loss. Eligible under Mongol Daatgal's compulsory motor liability insurance (ХАОДД).",
+      estimatedCost: { amount: 2400000, currency: "MNT" },
+      estimatedTimeMinutes: 360,
+    },
+    repairSteps: [
+      { index: 1, title: "If the police have been called — stay in place", description: "Don't move either vehicle until the police arrive. Push broken glass + debris aside. Place a hazard triangle 30m back.", estMinutes: 10, toolsRequired: ["Hazard triangle"], safetyNote: "If you're blocking traffic, get permission from the insurer before moving the car to the side." },
+      { index: 2, title: "Call Mongol Daatgal (REQUIRED BEFORE THE POLICE DECIDE)", description: "1800-1100 (24h hotline). A field adjuster comes to the scene and runs the damage assessment. Under ХАОДД, the insurer's act is required before the officer can assign fault.", estMinutes: 30, toolsRequired: ["Phone"], safetyNote: "Keep your insurance certificate ready so you can give your policy number." },
+      { index: 3, title: "Hand the Snap report to the adjuster", description: "The detected damages + photos from Snap go directly into the adjuster's act, saving them 20–30 minutes of paperwork.", estMinutes: 5, toolsRequired: [], safetyNote: null },
+      { index: 4, title: "Police decide fault — Snap becomes evidence", description: "The detected damages + impact pattern from Snap is visual evidence for the violation protocol. Attach it to the report.", estMinutes: 20, toolsRequired: [], safetyNote: null },
+      { index: 5, title: "Claim is paid by the at-fault driver's insurance", description: "Under ХАОДД, the at-fault driver's insurance covers the repair. The insurer also covers the tow to the shop (within 50km).", estMinutes: 0, toolsRequired: [], safetyNote: null },
+    ],
+    partsNeeded: ["1× OEM bumper (Hyundai Sonata 2021)", "1× front-right door", "1× parking sensor housing", "Paint + primer + clear coat materials"],
+    safetyWarnings: ["Don't try to drive the car yourself — a sensor cable inside the bumper may be cut.", "Stay in your original position until the police arrive. Photograph everything while you wait.", "If the police assign fault before the Mongol Daatgal adjuster arrives, the insurer can dispute the claim."],
+    reports: {
+      damageReport: "Hyundai Sonata 2021 with serious damage. A 28cm crack across the middle of the front bumper, the front-right door pushed in 3–4cm and only half-opens. One side of the parking sensor mount is broken loose. Structural steel is intact. Recommendation: replace bumper + door, recalibrate the parking sensor, total ~₮2,400,000 / 6 hours. Not a total loss — fully covered under Mongol Daatgal ХАОДД.",
+      claimSummary: "Side-impact collision at an intersection. Bumper + front-right door need replacement. No structural damage. Total repair ~₮2,400,000. The Snap report serves as evidence both for the Mongol Daatgal act and for the traffic police violation protocol.",
+      customerSummary: "Repairable — fully covered under Mongol Daatgal ХАОДД at ~₮2,400,000.",
+    },
+    pricingBreakdown: [
+      { label: "OEM bumper (Hyundai Sonata 2021)", amount: 920000, currency: "MNT", note: "Hyundai Mongolia parts" },
+      { label: "Front-right door panel", amount: 780000, currency: "MNT", note: "OEM, color-matched" },
+      { label: "Parking sensor housing + recalibration", amount: 180000, currency: "MNT", note: "OBD-tool recalibration required" },
+      { label: "Paint + clear coat + materials", amount: 240000, currency: "MNT" },
+      { label: "Labour (6 hours @ ₮48,000/hr)", amount: 280000, currency: "MNT", note: "UB body shop rate" },
+    ],
+    marketComparison: {
+      replacementCost: 38000000,
+      currency: "MNT",
+      source: "Used 2021 Sonata market value ≈ ₮38M (Unegui.mn comps). Repair = 6.3% of replacement → not a total loss.",
+    },
+    fixLocations: [
+      { name: "Hyundai Service Center", address: "Khan-Uul, Chinggis Ave 7, official dealer", phone: "+976 7700-1818", distanceKm: 5.2, rating: 4.8, note: "OEM warranty work · accepts Mongol Daatgal direct billing" },
+      { name: "Sengur Auto Service", address: "Khan-Uul, 11th khoroo, auto service complex", phone: "+976 9911-2234", distanceKm: 2.4, rating: 4.7, note: "Body + paint specialist" },
+      { name: "Pro Body Shop", address: "Bayangol, 17th khoroo", phone: "+976 8800-3399", distanceKm: 6.0, rating: 4.5, note: "Insurer-preferred shop" },
+    ],
   },
   marketplace: {
     detectedAsset: "iPhone 13 Pro 256GB",
@@ -194,6 +277,22 @@ const templates: Record<string, Template> = {
       claimSummary: "Used iPhone 13 Pro 256GB with hairline back-glass crack and a corner chip. Fair price: ₮1,300,000 — about ₮500,000 below the seller's asking price.",
       customerSummary: "Worth buying — but offer ₮1,300,000, not ₮1,800,000.",
     },
+    pricingBreakdown: [
+      { label: "Base fair value (cosmetic condition)", amount: 1400000, currency: "MNT", note: "iPhone 13 Pro 256GB used market" },
+      { label: "Back-glass crack discount", amount: -80000, currency: "MNT", note: "cosmetic; doesn't affect use" },
+      { label: "Corner ding discount", amount: -20000, currency: "MNT", note: "cosmetic" },
+    ],
+    marketComparison: {
+      fairMarketValue: 1300000,
+      replacementCost: 1800000,
+      currency: "MNT",
+      source: "Comparable Unegui.mn + Facebook Marketplace listings UB · last 30 days, condition matched.",
+    },
+    fixLocations: [
+      { name: "iCare (back-glass repair, optional)", address: "Bayangol, Peace Ave 12B", phone: "+976 7011-5566", distanceKm: 3.2, rating: 4.7, note: "₮180,000 if you want the crack fixed after buying" },
+      { name: "iService Mongolia", address: "Sukhbaatar, Trade Centre tower 1F", phone: "+976 7611-2200", distanceKm: 1.5, rating: 4.6, note: "Apple-authorized" },
+      { name: "Mac UB · Apple Premium Reseller", address: "Sukhbaatar district, TDB tower 1F", phone: "+976 7611-2233", distanceKm: 1.8, rating: 4.8 },
+    ],
   },
   moveout: {
     detectedAsset: "Rental flat — bedroom wall + hardwood floor scuff",
@@ -220,6 +319,22 @@ const templates: Record<string, Template> = {
       claimSummary: "The two items the landlord flagged are normal wear-and-tear. Reasonable repair cost is about $45 in materials — not the full deposit.",
       customerSummary: "This is normal wear. $45 in materials is the most that's fair to deduct.",
     },
+    pricingBreakdown: [
+      { label: "Matching wall paint (small can)", amount: 10, currency: "USD" },
+      { label: "Wood-floor polish kit", amount: 20, currency: "USD" },
+      { label: "Applicator + brush + cloth", amount: 8, currency: "USD" },
+      { label: "Labour (DIY, 1 hour)", amount: 7, currency: "USD", note: "or hire a handyperson" },
+    ],
+    marketComparison: {
+      replacementCost: 600,
+      currency: "USD",
+      source: "A typical 2BR deposit in UB is ~$600. Reasonable deduction = 7.5% of deposit.",
+    },
+    fixLocations: [
+      { name: "Build & Decor UB", address: "Bayangol, Tovchoo construction market", phone: "+976 7011-0011", distanceKm: 3.5, rating: 4.4, note: "Paint + floor finishes" },
+      { name: "WeFix.mn (handyperson)", address: "online dispatch · UB-wide", phone: "+976 7700-2200", rating: 4.6, note: "Send the Snap report, get a fixed quote" },
+      { name: "Nomin Hardware", address: "Multiple branches · UB", phone: undefined, rating: 4.3, note: "Walk-in for paint matching" },
+    ],
   },
   laptop_liquid: {
     detectedAsset: "MacBook Air M2 — keyboard liquid damage",
@@ -247,5 +362,21 @@ const templates: Record<string, Template> = {
       claimSummary: "Coffee spill on a MacBook Air. Trackpad damaged, keyboard at risk. Estimated repair cost $320 — well below the device's value. Recommend filing under sudden accidental damage.",
       customerSummary: "Repairable for about $320 — please don't turn it back on until it's been inspected.",
     },
+    pricingBreakdown: [
+      { label: "Trackpad assembly (OEM)", amount: 140, currency: "USD", note: "MBA-M2 trackpad SKU" },
+      { label: "Keyboard contact cleaning", amount: 60, currency: "USD", note: "ultrasonic + isopropyl" },
+      { label: "Logic-board inspection", amount: 40, currency: "USD", note: "rule out corrosion" },
+      { label: "Labour (90 minutes, certified)", amount: 80, currency: "USD" },
+    ],
+    marketComparison: {
+      replacementCost: 1200,
+      currency: "USD",
+      source: "New MBA M2 ≈ $1,200. Repair = 27% of replacement → clear repair.",
+    },
+    fixLocations: [
+      { name: "iCare Service Center", address: "Bayangol, Peace Ave 12B", phone: "+976 7011-5566", distanceKm: 3.2, rating: 4.7, note: "Liquid-damage specialist" },
+      { name: "Mac UB · Apple Premium Reseller", address: "Sukhbaatar district, TDB tower 1F", phone: "+976 7611-2233", distanceKm: 1.8, rating: 4.8, note: "Genuine parts, AppleCare-eligible" },
+      { name: "Reset · Apple Authorised Repair", address: "Sukhbaatar, Naadam St 5, 2nd floor", phone: "+976 7700-4488", distanceKm: 0.9, rating: 4.6, note: "Same-day diagnostic" },
+    ],
   },
 };

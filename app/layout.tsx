@@ -17,11 +17,11 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500&family=JetBrains+Mono:wght@400;500;600&display=swap"
         />
         <link
           rel="stylesheet"
-          href="https://api.fontshare.com/v2/css?f[]=boska@400,500,700,400i,500i&f[]=supreme@300,400,500,700&display=swap"
+          href="https://api.fontshare.com/v2/css?f[]=supreme@300,400,500,700&display=swap"
         />
       </head>
       <body className="min-h-full flex flex-col">{children}</body>

@@ -53,12 +53,12 @@ export default function History() {
                   <Camera size={20} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-x-2 gap-y-1 flex-wrap">
                     <span className="font-mono text-[10px] text-ink-dim uppercase tracking-[0.2em]">{s.code}</span>
-                    <span className="px-2 py-0.5 rounded-full bg-warm/60 border border-line text-[9px] font-mono uppercase text-ink-muted">
+                    <span className="px-2 py-0.5 rounded-full bg-warm/60 border border-line text-[9px] font-mono uppercase text-ink-muted whitespace-nowrap">
                       {s.kind}
                     </span>
-                    <span className="font-mono text-[10px] text-ink-dim">· {s.when}</span>
+                    <span className="font-mono text-[10px] text-ink-dim whitespace-nowrap">· {s.when}</span>
                   </div>
                   <div className="mt-1 text-[15px] font-medium truncate">{s.asset}</div>
                   <div className="mt-1 text-[13px] text-ink-muted">{s.verdict}</div>
